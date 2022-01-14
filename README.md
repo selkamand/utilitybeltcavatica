@@ -10,8 +10,7 @@ remotes::install_github("selkamand/utilitybeltcavatica")
 
 ## Usage
 
-This package extends functionality of the `sevenbridges` package on bioconductor. 
-Examples of common utilities are shown below
+This package extends functionality of the `sevenbridges` package on bioconductor.
 
 ### Find File By FilePath
 ```
