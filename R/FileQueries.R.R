@@ -24,6 +24,16 @@ find_file_using_filepath <- function(project, filepaths){
   return(files)
 }
 
+#'
+#' @inherit find_file_using_filepath
+#'
+#' @return character fileids
+#' @export
+#'
+find_fileid_using_filepath <- function(project, filepaths){
+  find_file_using_filepath(project, filepaths) %>%
+    vapply(FUN.VALUE = "", FUN = function(x){x[["id"]]})
+}
 
 #' File and FileList Operations
 #'

@@ -2,5 +2,6 @@
 
 export("%>%")
 export(find_file_using_filepath)
+export(find_fileid_using_filepath)
 export(get_files_from_filelist_by_name)
 importFrom(magrittr,"%>%")
