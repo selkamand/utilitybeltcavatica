@@ -34,7 +34,7 @@ find_fileid_using_filepath <- function(project, filepaths){
   find_file_using_filepath(project, filepaths) %>%
     vapply(FUN.VALUE = "", FUN = function(x){
       if(is.na(x)) return(NA_character_)
-      x[["id"]]
+      return(x[["id"]])
       })
 }
 
@@ -57,7 +57,7 @@ get_path_from_splitpath <- function(project, splitpath){
 
   for (filename in splitpath[-1]){
 
-    current_folder_contents <- current_folder$list_folder_contents()
+    current_folder_contents <- current_folder$list_folder_contents(complete=TRUE)
 
       next_file_or_folder <- get_files_from_filelist_by_name(
         filelist = current_folder_contents,
