@@ -32,7 +32,10 @@ find_file_using_filepath <- function(project, filepaths){
 #'
 find_fileid_using_filepath <- function(project, filepaths){
   find_file_using_filepath(project, filepaths) %>%
-    vapply(FUN.VALUE = "", FUN = function(x){x[["id"]]})
+    vapply(FUN.VALUE = "", FUN = function(x){
+      if(is.na(x)) return(NA)
+      x[["id"]]
+      })
 }
 
 #' File and FileList Operations
