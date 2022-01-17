@@ -94,5 +94,5 @@ get_files_from_filelist_by_name <- function(filelist, filenames){
   if(length(query_results) == 0) return(NA)
   else if (length(query_results) == 1) return(filelist[[query_results]])
   else return(filelist[query_results])
-
 }
+
