@@ -62,7 +62,7 @@ get_path_from_splitpath <- function(project, splitpath){
       )
 
       if(!isS4(next_file_or_folder) && is.na(next_file_or_folder)){
-        message(paste0("Could not find any file named: ", filename, " in the folder ", current_folder$name))
+        message(paste0("Could not find the file: ", paste0(splitpath, collapse = "/"), " in the folder ", current_folder$name))
         return(NA)
         }
 
