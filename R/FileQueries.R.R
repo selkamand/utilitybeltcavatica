@@ -33,7 +33,7 @@ find_file_using_filepath <- function(project, filepaths){
 find_fileid_using_filepath <- function(project, filepaths){
   find_file_using_filepath(project, filepaths) %>%
     vapply(FUN.VALUE = "", FUN = function(x){
-      if(is.na(x)) return(NA)
+      if(is.na(x)) return(NA_character_)
       x[["id"]]
       })
 }
