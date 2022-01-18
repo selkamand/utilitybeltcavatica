@@ -9,20 +9,22 @@
 #' @return NULL - run for its side effects
 #' @export
 task_scheduler <- function(project, task_list, seconds_between_job_starts, max_number_of_concurrent_task){
+  #browser()
   assertthat::assert_that(is.list(task_list), msg = "task_list must be a list")
   assertthat::assert_that(length(task_list) > 0, msg = "task_list is empty")
-  for (element in task_list) assertthat::assert_that(class(element) == "Task", msg = "Not all elements in task_list belong to the Task Class")
+  for (element in task_list) {assertthat::assert_that(class(element) == "Task", msg = "Not all elements in task_list belong to the Task Class")}
 
   next_task_to_spawn = 1
   while (TRUE){
-    running_tasks=p$task(status="running", complete=TRUE)
-    running_tasks <- ifelse(is.null(running_tasks), yes = 0, no=running_tasks)
+    running_tasks=project$task(status="running", complete=TRUE)
+    if (is.null(running_tasks)) running_tasks <- 0
     number_of_running_tasks <- length(running_tasks)
 
     while(number_of_running_tasks >= max_number_of_concurrent_task){
+      #browser()
       message("Number of running tasks [", number_of_running_tasks, "] is at or above the maximum [",max_number_of_concurrent_task,"]. Waiting 5 minutes then checking again")
       Sys.sleep(time = 60*5)
-      running_tasks=p$task(status="running", complete=TRUE)
+      running_tasks=project$task(status="running", complete=TRUE)
       running_tasks <- ifelse(is.null(running_tasks), yes = 0, no=running_tasks)
       number_of_running_tasks <- length(running_tasks)
     }
