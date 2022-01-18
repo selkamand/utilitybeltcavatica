@@ -25,7 +25,7 @@ task_scheduler <- function(project, task_list, seconds_between_job_starts, max_n
       message("Number of running tasks [", number_of_running_tasks, "] is at or above the maximum [",max_number_of_concurrent_task,"]. Waiting 5 minutes then checking again")
       Sys.sleep(time = 60*5)
       running_tasks=project$task(status="running", complete=TRUE)
-      running_tasks <- ifelse(is.null(running_tasks), yes = 0, no=running_tasks)
+      if (is.null(running_tasks)) running_tasks <- 0
       number_of_running_tasks <- length(running_tasks)
     }
 
