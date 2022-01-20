@@ -31,7 +31,19 @@ task_scheduler <- function(project, task_list, seconds_between_job_starts, max_n
 
     message("Running Task ",next_task_to_spawn," of ", length(task_list))
 
-    task_list[[next_task_to_spawn]]$run()
+    tryCatch(
+      expr = {
+        task_list[[next_task_to_spawn]]$run()
+      },
+      error = function(err){
+        message(err)
+        message("\n\nresuming in spite of error")
+      },
+      warning = function(warn){
+        message(warning)
+        message("\n\nresuming in spite of warning")
+      }
+    )
 
     next_task_to_spawn = next_task_to_spawn + 1
 
