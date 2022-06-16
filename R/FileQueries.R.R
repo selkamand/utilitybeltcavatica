@@ -11,7 +11,7 @@
 #' @return A Files object or a list of Files Objects.
 #' @export
 #'
-find_file_using_filepath <- function(project, filepaths){
+cavatica_file_from_filepath <- function(project, filepaths){
   assertthat::assert_that(is.character(filepaths))
   filepaths <- sub(pattern = "\\/$", replacement = "", x = filepaths)
   filepaths <- gsub(pattern = "(\\/)+", replacement = "/", x = filepaths)
@@ -26,13 +26,13 @@ find_file_using_filepath <- function(project, filepaths){
 
 #'
 #'
-#' @inherit find_file_using_filepath
+#' @inherit cavatica_file_from_filepath
 #'
 #' @return character fileids
 #' @export
 #'
-find_fileid_using_filepath <- function(project, filepaths){
-  files = find_file_using_filepath(project, filepaths)
+cavatica_file_id_from_filepath <- function(project, filepaths){
+  files = cavatica_file_from_filepath(project, filepaths)
   if (length(files) == 1) files <- list(files)
 
   vapply(
