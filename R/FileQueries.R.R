@@ -25,16 +25,22 @@ find_file_using_filepath <- function(project, filepaths){
 }
 
 #'
+#'
 #' @inherit find_file_using_filepath
 #'
 #' @return character fileids
 #' @export
 #'
 find_fileid_using_filepath <- function(project, filepaths){
-  find_file_using_filepath(project, filepaths) %>%
-    vapply(FUN.VALUE = "", FUN = function(x){
-      if(is.na(x)) return(NA_character_)
-      return(x[["id"]])
+  files = find_file_using_filepath(project, filepaths)
+  if (length(files) == 1) files <- list(files)
+
+  vapply(
+      X = files,
+      FUN.VALUE = "",
+      FUN = function(x){
+        if(!isS4(x)) return(NA_character_)
+        return(x[["id"]])
       })
 }
 
@@ -95,4 +101,21 @@ get_files_from_filelist_by_name <- function(filelist, filenames){
   else if (length(query_results) == 1) return(filelist[[query_results]])
   else return(filelist[query_results])
 }
+
+cache_cavatica_fileids <- function(project){
+  files_in_root = project$file(complete=TRUE)
+  map
+}
+
+recursive_file_list <- function(project, folder){
+  #folder_contents = list()
+  current_folder = folder
+  #while(current_folder$type == "folder"){
+    #folder_contents[current_folder$name] <-
+    map(as.list(current_folder$list_folder_contents(complete = TRUE)), ~ if(.x$type == "folder") {recursive_file_list(project, .x)})
+  #}
+
+}
+
+#fastqfolderid="61de74cb77a5c310245cc3b4"
 
