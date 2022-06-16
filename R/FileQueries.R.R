@@ -67,7 +67,7 @@ get_path_from_splitpath <- function(project, splitpath){
 
       next_file_or_folder <- get_files_from_filelist_by_name(
         filelist = current_folder_contents,
-        filename = filename
+        filenames = filename
       )
 
       if(!isS4(next_file_or_folder) && is.na(next_file_or_folder)){
@@ -102,20 +102,15 @@ get_files_from_filelist_by_name <- function(filelist, filenames){
   else return(filelist[query_results])
 }
 
-cache_cavatica_fileids <- function(project){
-  files_in_root = project$file(complete=TRUE)
-  map
-}
+# cache_cavatica_fileids <- function(project){
+#   files_in_root = project$file(complete=TRUE)
+#   #map
+# }
 
 recursive_file_list <- function(project, folder){
   #folder_contents = list()
   current_folder = folder
-  #while(current_folder$type == "folder"){
-    #folder_contents[current_folder$name] <-
-    map(as.list(current_folder$list_folder_contents(complete = TRUE)), ~ if(.x$type == "folder") {recursive_file_list(project, .x)})
-  #}
+  purrr::map(as.list(current_folder$list_folder_contents(complete = TRUE)), ~ if(.x$type == "folder") {recursive_file_list(project, .x)})
 
 }
-
-#fastqfolderid="61de74cb77a5c310245cc3b4"
 

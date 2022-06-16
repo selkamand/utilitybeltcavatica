@@ -18,4 +18,5 @@ biocViews:
 Imports: 
     assertthat,
     magrittr,
+    purrr,
     sevenbridges
