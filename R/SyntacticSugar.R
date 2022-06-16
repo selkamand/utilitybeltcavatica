@@ -98,4 +98,29 @@ cavatica_app_inputs <- function(project, app_id){
 }
 
 
+#' Cavatica Get Project
+#'
+#' @param project_id project id (project_owner/project_name). If unsure,  (string)
+#' @param from where to source cavatica credentials
+#'
+#' @return
+#' @export
+#'
+cavatica_project_get <- function(project_id, from = "file", profile_name = "default"){
+  api = sevenbridges::Auth(from = from, profile_name = profile_name, type = "cavatica")
+  api$project(id = project_id)
+}
+
+#' List all projects
+#'
+#' @param project_id project id (project_owner/project_name). If unsure,  (string)
+#' @param from where to source cavatica credentials. defualt is to look for a file (~/.sevenbridges/credentials). See README for details on how to create this file.
+#' @param profile_name assuming credentials are coming from file, which profile should be used (text within square brackets within ~/.sevenbridges/credentials file are different profiles) (string)
+#'
+#' @return sevenbridges ProjectList object
+#' @export
+cavatica_project_list <- function(from = "file", profile_name = "default"){
+  api = sevenbridges::Auth(from = from, profile_name = profile_name, type = "cavatica")
+  api$project()
+}
 

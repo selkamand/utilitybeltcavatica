@@ -102,15 +102,23 @@ get_files_from_filelist_by_name <- function(filelist, filenames){
   else return(filelist[query_results])
 }
 
-# cache_cavatica_fileids <- function(project){
-#   files_in_root = project$file(complete=TRUE)
-#   #map
-# }
 
 recursive_file_list <- function(project, folder){
   #folder_contents = list()
   current_folder = folder
   purrr::map(as.list(current_folder$list_folder_contents(complete = TRUE)), ~ if(.x$type == "folder") {recursive_file_list(project, .x)})
-
 }
+
+#' Get File from ID
+#'
+#' @inheritParams standard_description_function
+#'
+#' @return sevenbridges File Object (or FileList if multiple IDs are supplied)
+#' @export
+cavatica_file_from_file_id <- function(project, file_id){
+  assert_is_project(project)
+  project$file(file_id)
+}
+
+
 
