@@ -117,7 +117,7 @@ recursive_file_list <- function(project, folder){
 #' @export
 cavatica_file_from_file_id <- function(project, file_id){
   assert_is_project(project)
-  project$file(file_id)
+  project$file(id=file_id)
 }
 
 
