@@ -15,5 +15,10 @@ cavatica_file_from_filepath(project, filepaths)
 A Files object or a list of Files Objects.
 }
 \description{
-File and FileList Operations
+Finds files from filepaths: designed to be vectorised and efficient with respect to api calls
+How it works is if you parse multiple filepaths with shared folders in their history,
+this fuction will remembar paths to shared folders so we don't have to re-lookup the same folders over and over.
+}
+\details{
+This is usually more efficient than spending forever building a cache which has to be updated whenever new files are added to the volume.
 }

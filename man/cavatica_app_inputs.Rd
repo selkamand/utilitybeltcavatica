@@ -9,7 +9,7 @@ cavatica_app_inputs(project, app_id)
 \arguments{
 \item{project}{a sevenbridges 'Project' object. See readme for instructions on how to create this object}
 
-\item{app_id}{unique app id: <project_id>/<short_app_id>/<version_number>. Can find this by running cavatica_app_list_all, cavatica_app_search, or using web platform (ID is everything after # in URL. May still need to add /<version_number>) (character)}
+\item{app_id}{unique app id: <project_id>/<short_app_id>/<version_number>. Can find this by running cavatica_app_list_all, cavatica_app_search, or using web platform (ID is everything after # in URL. May still need to add /<version_number>) (string)}
 }
 \value{
 named character vector. Names are inputID, value describes expected input type

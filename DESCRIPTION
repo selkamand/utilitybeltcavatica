@@ -17,6 +17,8 @@ RoxygenNote: 7.2.0
 biocViews:
 Imports: 
     assertthat,
+    dplyr,
     magrittr,
     purrr,
+    rlang,
     sevenbridges

@@ -38,6 +38,32 @@ cavatica_tasks_create <- function(project, name, app_id, inputs = NULL, batch = 
   )
 }
 
+#' Cavatica Tasks
+#'
+#' @inheritParams standard_description_function
+#' @param pattern pattern of name e.g. 'prefix*'
+#' @return tasklist
+#' @export
+#'
+cavatica_tasks_search <- function(project, pattern, status = c("all", "queued", "draft", "running", "completed", "aborted", "failed")){
+  assert_is_project(project)
+  status = rlang::arg_match(status)
+  project$task(name = pattern, complete = TRUE, status = status)
+}
+
+#' Cavatica Tasks
+#'
+#' Find tasks with name starting with 'prefix'
+#'
+#' @inheritParams cavatica_tasks_search
+#' @param prefix prefix of task name (string)
+#' @return tasklist
+#' @export
+#'
+cavatica_tasks_search_by_prefix <- function(project, prefix, status = c("all", "queued", "draft", "running", "completed", "aborted", "failed")){
+  cavatica_tasks_search(project = project, pattern = paste0(prefix, "*"), status = status)
+}
+
 
 #' List all apps in project
 #'
@@ -68,7 +94,7 @@ cavatica_app_search <- function(project, name){
 #'
 #' Get sevenbridges App object using its unique ID
 #'
-#' @inheritParams cavatica_tasks_list_all
+#' @inheritParams standard_description_function
 #'
 #' @return If on app_id is supplied, returns a sevenbridges App object. If given multiple ids, will return a list of sevenbridges App objects
 #' @export
@@ -101,26 +127,58 @@ cavatica_app_inputs <- function(project, app_id){
 #' Cavatica Get Project
 #'
 #' @param project_id project id (project_owner/project_name). If unsure,  (string)
-#' @param from where to source cavatica credentials
+#' @inheritParams standard_description_function
 #'
-#' @return
+#' @return cavatica project
 #' @export
 #'
-cavatica_project_get <- function(project_id, from = "file", profile_name = "default"){
-  api = sevenbridges::Auth(from = from, profile_name = profile_name, type = "cavatica")
-  api$project(id = project_id)
+cavatica_project_get <- function(auth = cavatica_api_connect(), project_id, status = "all"){
+  auth$project(id = project_id)
 }
 
 #' List all projects
 #'
 #' @param project_id project id (project_owner/project_name). If unsure,  (string)
-#' @param from where to source cavatica credentials. defualt is to look for a file (~/.sevenbridges/credentials). See README for details on how to create this file.
-#' @param profile_name assuming credentials are coming from file, which profile should be used (text within square brackets within ~/.sevenbridges/credentials file are different profiles) (string)
+#' @inheritParams standard_description_function
 #'
 #' @return sevenbridges ProjectList object
 #' @export
-cavatica_project_list <- function(from = "file", profile_name = "default"){
-  api = sevenbridges::Auth(from = from, profile_name = profile_name, type = "cavatica")
-  api$project()
+cavatica_project_list <- function(auth = cavatica_api_connect(), project_id){
+  auth$project(id = project_id)
 }
+
+
+#' Cavatica Api Rate Limit
+#'
+#' Find the api rate limit
+#'
+#' @inheritParams standard_description_function
+#'
+#' @return cavatica api rate limit (string)
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' auth = cavatica_api_connect()
+#' cavatica_api_rate_limit(auth)
+#' }
+cavatica_api_rate_limit <- function(auth){
+  auth$rate_limit()
+}
+
+#' Connect to API
+#'
+#' Connect to the cavatica api and return the Auth object
+#'
+#' @param from where to source cavatica credentials. defualt is to look for a file (~/.sevenbridges/credentials). See README for details on how to create this file.
+#' @param profile_name assuming credentials are coming from file, which profile should be used (text within square brackets within ~/.sevenbridges/credentials file are different profiles) (string)
+#'
+#' @return sevenbridges api auth object
+#' @export
+cavatica_api_connect <- function(from = "file", profile_name = "default"){
+  api = sevenbridges::Auth(from = from, profile_name = profile_name, type = "cavatica")
+  return(api)
+}
+
 
