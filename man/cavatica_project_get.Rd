@@ -4,14 +4,14 @@
 \alias{cavatica_project_get}
 \title{Cavatica Get Project}
 \usage{
-cavatica_project_get(auth = cavatica_api_connect(), project_id, status = "all")
+cavatica_project_get(project_id, status = "all", auth = cavatica_api_connect())
 }
 \arguments{
-\item{auth}{authorisation object used to interface with cavatica api. Retrieved by running cavatica_api_connect()}
-
 \item{project_id}{project id (project_owner/project_name). If unsure,  (string)}
 
 \item{status}{one of: c("all", "queued", "draft", "running", "completed", "aborted", "failed")}
+
+\item{auth}{authorisation object used to interface with cavatica api. Retrieved by running cavatica_api_connect()}
 }
 \value{
 cavatica project

@@ -9,7 +9,6 @@
 #' @param filepaths the filepaths to files you want retrieve (character)
 #'
 #' @return A Files object or a list of Files Objects.
-#'
 cavatica_file_from_filepath2 <- function(project, filepaths){
   assertthat::assert_that(is.character(filepaths))
   filepaths <- sub(pattern = "\\/$", replacement = "", x = filepaths)
@@ -53,7 +52,6 @@ cavatica_file_id_from_filepath <- function(project, filepaths){
 #' @return File at the end of the filepath (sevenbridges Files class object) OR NA if file doesnt exist
 #'
 get_path_from_splitpath <- function(project, splitpath, file_object_only = FALSE){
-  #browser()
   current_folder <- project$file(name=splitpath[1], exact=TRUE, complete=TRUE)
 
   if(length(current_folder) == 0 ) { message("Could not find: ", splitpath[1]); return(NA)}
@@ -83,14 +81,14 @@ get_path_from_splitpath <- function(project, splitpath, file_object_only = FALSE
 
       if(next_file_or_folder$type == "file") {
         current_folder <- next_file_or_folder
-        path_record <- c(path_record,paste0(splitpath[1:(i+1)], collapse = "/"))
+        path_record <- c(path_record,paste0(splitpath[1:min(i+1, length(splitpath))], collapse = "/"))
         folder_record[[length(folder_record)+1]] <- current_folder
         record_df = dplyr::tibble(path = path_record, file = folder_record)
         if(file_object_only) return(next_file_or_folder) else return(list("FileObject" = current_folder, "Record" = record_df))
       }
       else{
         current_folder <- next_file_or_folder
-        path_record <- c(path_record,paste0(splitpath[1:(i+1)], collapse = "/"))
+        path_record <- c(path_record,paste0(splitpath[1:min(i+1, length(splitpath))], collapse = "/"))
         folder_record[[length(folder_record)+1]] <- current_folder
       }
   }
@@ -99,9 +97,6 @@ get_path_from_splitpath <- function(project, splitpath, file_object_only = FALSE
   record_df = dplyr::tibble(path = path_record, file = folder_record)
   if(file_object_only) return(next_file_or_folder) else return(list("FileObject" = current_folder, "Record" = record_df))
 }
-
-#devtools::load_all(); a=cavatica_file_from_filepath(project = p, filepath = "/LKCGP-P001606-256646-01-01-01-R1_WithChildren_Pyamanorum.R1.fq")
-#devtools::load_all(); a=cavatica_file_from_filepath(project = p, filepath = "/fastq/P017801_360807_G_W/P017801_360807_G_W_HJWC2DSX3_CCTCCGGTTG-TGGTGTTATG_L004_R1.fastq.gz")
 
 #' File and FileList Operations
 #'
@@ -119,10 +114,10 @@ get_path_from_splitpath_with_explicit_parent_folder <- function(project, splitpa
 
   path_prefix = cavatica_file_path_from_file(project = project, file = parent_folder)
 
-  path_record <- paste0(path_prefix, "/", splitpath[1])
+  path_record <- paste0(path_prefix)
   folder_record <- list(current_folder)
 
-  if (current_folder$type == "file" | length(splitpath) == 1){
+  if (current_folder$type == "file"){
     record_df = dplyr::tibble(path = path_record, file = folder_record)
     if(file_object_only) return(current_folder) else return(list("FileObject" = current_folder, "Record" = record_df))
   }
@@ -144,15 +139,17 @@ get_path_from_splitpath_with_explicit_parent_folder <- function(project, splitpa
 
     if(next_file_or_folder$type == "file") {
       current_folder <- next_file_or_folder
-      path_record <- c(path_record,paste0(splitpath[1:(i+1)], collapse = "/"))
+
+      path_record <- c(path_record,paste0(path_prefix,"/", paste0(splitpath[1:min((i), length(splitpath))], collapse = "/")))
       folder_record[[length(folder_record)+1]] <- current_folder
       record_df = dplyr::tibble(path = path_record, file = folder_record)
       if(file_object_only) return(next_file_or_folder) else return(list("FileObject" = current_folder, "Record" = record_df))
     }
-    else
+    else{
       current_folder <- next_file_or_folder
-      path_record <- c(path_record,paste0(splitpath[1:(i+1)], collapse = "/"))
+      path_record <- c(path_record,paste0(path_prefix, "/", paste0(splitpath[1:min((i), length(splitpath))], collapse = "/")))
       folder_record[[length(folder_record)+1]] <- current_folder
+    }
   }
 
   #This code gets run only if last element of splitlist was a folder
@@ -231,11 +228,11 @@ cavatica_file_from_file_id <- function(project, file_id){
 #'
 #' @param project a cavatica project object
 #' @param filepaths the filepaths to files you want retrieve (character)
-#'
+#' @param return_ids return file ids instead of file objects (boolean)
 #' @return A Files object or a list of Files Objects.
 #' @export
 #'
-cavatica_file_from_filepath <- function(project, filepaths){
+cavatica_file_from_filepath <- function(project, filepaths, return_ids = FALSE){
   assertthat::assert_that(is.character(filepaths))
   filepaths = filepaths_fix(filepaths)
 
@@ -260,41 +257,43 @@ cavatica_file_from_filepath <- function(project, filepaths){
       longest_path_matched_already_known_file_object = known_paths_df$file[match(longest_path_matched_already_known_path, known_paths_df$path)][[1]]
 
       message("Utilising previously described path: ", longest_path_matched_already_known_path)
-      #browser()
+
       remaining_path_steps = current_splitpath[(longest_path_matched_already_known_index+1):max((longest_path_matched_already_known_index+1), length(current_splitpath))]
-      if(is.na(remaining_path_steps)){
+
+      if(all(is.na(remaining_path_steps))){
         message("Full path described. Pulling file from known db.") # Don't need to do anyhting in this section since its already in the db we filter for samples of interest at the end
-        #f = known_paths_df$file[match(longest_path_matched_already_known_path, known_paths_df$path)]
+
       }
       else{
-        #browser()
+
         res = get_path_from_splitpath_with_explicit_parent_folder(project = project, splitpath = remaining_path_steps, parent_folder = longest_path_matched_already_known_file_object)
         known_paths_df = rbind(known_paths_df, res[[2]])
       }
-
     }
 
     #If no part of the path has been previously recorded
     else{
-      #browser()
-      message("No part of this path has been previously sequenced ... finding from scratch")
+      message("No part of this path has been previously cached ... finding from scratch")
       res = get_path_from_splitpath(project = project, splitpath = current_splitpath) # returning the same folders
       known_paths_df = rbind(known_paths_df, res[[2]])
     }
     message("\n")
   }
 
-  #browser()
-
   known_paths_df[["id"]] = cavatica_file_id_from_files(files = known_paths_df$file)
 
   filepaths_of_interest_only = dplyr::left_join(
     x = dplyr::tibble(filepaths = filepaths),
-    y= known_paths_df,
+    y= dplyr::distinct(known_paths_df, path, .keep_all = TRUE),
     by = list(x="filepaths", y= "path")
   )
 
-  return(filepaths_of_interest_only)
+  if(return_ids){
+    return(filepaths_of_interest_only[["id"]])
+  }
+  else
+    return(filepaths_of_interest_only[["file"]])
+
 
 }
 
@@ -315,18 +314,6 @@ cavatica_file_id_from_files <- function(files){
       return(x[["id"]])
     })
 }
-
-# cavatica_file_from_filepath_with_parent_folder <- function(parent_folder, filepaths){
-#   assertthat::assert_that(is.character(filepaths))
-#   filepaths <- filepaths_fix(filepaths)
-#   # Split path into each element
-#   splitpath <- strsplit(x = filepaths, split = "/", fixed = TRUE)
-#   files <- sapply(splitpath, FUN = function(path){ get_path_from_splitpath_with_explicit_parent_folder(project = project, splitpath = path, parent_folder = parent_folder)})
-#   if(length(files) == 1) { files <- files[[1]]}
-#   return(files)
-# }
-
-#fastq_folder = cavatica_file_from_filepath(p, filepaths = "/fastq"); cavatica_file_from_filepath_with_parent_folder(parent_folder = fastq_folder, filepath = "/P017801_360807_G_W/P017801_360807_G_W_HJWC2DSX3_CCTCCGGTTG-TGGTGTTATG_L004_R1.fastq.gz")
 
 
 filepaths_fix <- function(filepaths){

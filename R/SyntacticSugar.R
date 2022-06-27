@@ -132,7 +132,7 @@ cavatica_app_inputs <- function(project, app_id){
 #' @return cavatica project
 #' @export
 #'
-cavatica_project_get <- function(auth = cavatica_api_connect(), project_id, status = "all"){
+cavatica_project_get <- function(project_id, status = "all", auth = cavatica_api_connect()){
   auth$project(id = project_id)
 }
 

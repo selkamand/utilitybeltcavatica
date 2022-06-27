@@ -4,12 +4,14 @@
 \alias{cavatica_file_from_filepath}
 \title{File and FileList Operations}
 \usage{
-cavatica_file_from_filepath(project, filepaths)
+cavatica_file_from_filepath(project, filepaths, return_ids = FALSE)
 }
 \arguments{
 \item{project}{a cavatica project object}
 
 \item{filepaths}{the filepaths to files you want retrieve (character)}
+
+\item{return_ids}{return file ids instead of file objects (boolean)}
 }
 \value{
 A Files object or a list of Files Objects.
