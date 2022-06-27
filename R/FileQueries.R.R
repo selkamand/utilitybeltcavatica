@@ -267,7 +267,7 @@ cavatica_file_from_filepath <- function(project, filepaths, return_ids = FALSE){
       else{
 
         res = get_path_from_splitpath_with_explicit_parent_folder(project = project, splitpath = remaining_path_steps, parent_folder = longest_path_matched_already_known_file_object)
-        if(!is.na(res)) known_paths_df = rbind(known_paths_df, res[[2]])
+        if(all(!is.na(res))) known_paths_df = rbind(known_paths_df, res[[2]])
       }
     }
 
@@ -275,7 +275,7 @@ cavatica_file_from_filepath <- function(project, filepaths, return_ids = FALSE){
     else{
       message("No part of this path has been previously cached ... finding from scratch")
       res = get_path_from_splitpath(project = project, splitpath = current_splitpath) # returning the same folders
-      if(!is.na(res)) known_paths_df = rbind(known_paths_df, res[[2]])
+      if(all(!is.na(res))) known_paths_df = rbind(known_paths_df, res[[2]])
     }
     message("\n")
   }
@@ -291,10 +291,18 @@ cavatica_file_from_filepath <- function(project, filepaths, return_ids = FALSE){
   filepaths_not_found = dplyr::filter(filepaths_of_interest_only, is.null(unlist(file)))[["filepaths"]]
 
   #browser()
-  message("======================\nMissing Files\n======================")
-  message("Failed to find the following files: \n")
-  message(paste0("[", seq_along(filepaths_not_found), "] ", filepaths_not_found, collapse = "\n"))
-  message("======================")
+  if(length(filepaths_not_found) == 0){
+    message("======================\nSuccess!\n======================")
+    message("[\u2714] all files were found on cavatica!")
+    message("======================")
+  }
+  else{
+    message("======================\nMissing Files\n======================")
+    message("Failed to find the following files: \n")
+    message(paste0("[", seq_along(filepaths_not_found), "] ", filepaths_not_found, collapse = "\n"))
+    message("======================")
+  }
+
 
   if(return_ids){
     return(filepaths_of_interest_only[["id"]])
