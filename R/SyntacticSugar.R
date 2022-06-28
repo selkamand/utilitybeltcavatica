@@ -65,6 +65,20 @@ cavatica_tasks_search_by_prefix <- function(project, prefix, status = c("all", "
 }
 
 
+#' Cavatica Tasks
+#'
+#' delete task / tasks.
+#'
+#' @param tasks task / tasklist / list of task objects to delete
+#'
+#' @return run for its side effects
+#' @export
+#'
+cavatica_tasks_delete <- function(tasks){
+  sapply(tasks, FUN = function(x) {x$delete()})
+  return(invisible(NULL))
+}
+
 #' List all apps in project
 #'
 #' @inheritParams standard_description_function

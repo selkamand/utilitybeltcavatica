@@ -8,7 +8,7 @@
 #'
 #' @return NULL - run for its side effects
 #' @export
-cavatica_task_scheduler <- function(project, task_list, seconds_between_job_starts, max_number_of_concurrent_task){
+cavatica_tasks_schedule <- function(project, task_list, seconds_between_job_starts, max_number_of_concurrent_task){
   #browser()
   assertthat::assert_that(is.list(task_list), msg = "task_list must be a list")
   assertthat::assert_that(length(task_list) > 0, msg = "task_list is empty")
