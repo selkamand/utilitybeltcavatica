@@ -10,6 +10,7 @@
 #' @export
 cavatica_tasks_schedule <- function(project, task_list, seconds_between_job_starts, max_number_of_concurrent_task){
   #browser()
+  task_list <- as.list(task_list)
   assertthat::assert_that(is.list(task_list), msg = "task_list must be a list")
   assertthat::assert_that(length(task_list) > 0, msg = "task_list is empty")
   for (element in task_list) {assertthat::assert_that(class(element) == "Task", msg = "Not all elements in task_list belong to the Task Class")}

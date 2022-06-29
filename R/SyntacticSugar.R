@@ -79,6 +79,21 @@ cavatica_tasks_delete <- function(tasks){
   return(invisible(NULL))
 }
 
+#' Cavatica Tasks
+#'
+#' Run cavatica tasks
+#'
+#' @param tasks task / tasklist / list of task objects to delete
+#'
+#' @return run for its side effects
+#' @export
+#'
+cavatica_tasks_run <- function(tasks){
+  sapply(tasks, FUN = function(x) {x$run()})
+  return(invisible(NULL))
+}
+
+
 #' List all apps in project
 #'
 #' @inheritParams standard_description_function
