@@ -22,3 +22,5 @@ Imports:
     purrr,
     rlang,
     sevenbridges
+URL: https://github.com/selkamand/utilitybeltcavatica
+BugReports: https://github.com/selkamand/utilitybeltcavatica/issues
