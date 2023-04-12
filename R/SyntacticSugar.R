@@ -55,6 +55,17 @@ cavatica_tasks_search <- function(project, pattern, status = c("all", "queued", 
   project$task(name = pattern, complete = TRUE, status = status)
 }
 
+#' Get Task by ID
+#'
+#' @inheritParams standard_description_function
+#'
+#' @return task
+#' @export
+cavatica_tasks_get <- function(project, ids){
+  assert_is_project(project)
+  project$task(id = ids)
+}
+
 #' Cavatica Tasks
 #'
 #' Find tasks with name starting with 'prefix'
@@ -112,10 +123,10 @@ cavatica_tasks_download <- function(tasks, output_dir){
    assertthat::assert_that(length(output_dir) ==  length(tasks))
   }
 
-  sapply(tasks, function(task){
+  for (task in tasks){
     message("Downloading Task: ", task$name)
     task$download(destfile=output_dir)
-    })
+  }
 }
 
 cavatica_tasks_is_completed <- function(tasks){
