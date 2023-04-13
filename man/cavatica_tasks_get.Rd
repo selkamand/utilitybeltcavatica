@@ -4,7 +4,7 @@
 \alias{cavatica_tasks_get}
 \title{Get Task by ID}
 \usage{
-cavatica_tasks_get(project)
+cavatica_tasks_get(project, ids)
 }
 \arguments{
 \item{project}{a sevenbridges 'Project' object. See readme for instructions on how to create this object}
